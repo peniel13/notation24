@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Profil Utilisateur{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto bg-gray-800 rounded-lg shadow-lg p-8">
+        <h2 class="text-3xl font-semibold text-center text-white mb-6">Profil prof</h2>
+
+        <div class="flex justify-center mb-6">
+            {% if user.profile_pic %}
+                <!-- Afficher la photo de profil si elle existe -->
+                <img src="{{ user.profile_pic.url }}" alt="Photo de Profil" class="w-32 h-32 object-cover rounded-full border-4 border-indigo-500">
+            {% else %}
+                <!-- Afficher une image par défaut si la photo de profil n'est pas présente -->
+                <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="w-32 h-32 object-cover rounded-full border-4 border-indigo-500">
+            {% endif %}
+        </div>
+
+        <div class="space-y-6">
+            <div class="text-lg font-medium text-gray-300">
+                <strong>Nom : </strong>{{ user.first_name }} {{ user.last_name }}
+            </div>
+            <div class="text-lg font-medium text-gray-300">
+                <strong>Nom d'utilisateur : </strong>{{ user.username }}
+            </div>
+            <div class="text-lg font-medium text-gray-300">
+                <strong>Email : </strong>{{ user.email }}
+            </div>
+            <div class="text-lg font-medium text-gray-300">
+                <strong>Adresse : </strong>{{ user.address }}
+            </div>
+            <div class="text-lg font-medium text-gray-300">
+                <strong>Téléphone : </strong>{{ user.phone }}
+            </div>
+            <div class="text-lg font-medium text-gray-300">
+                <strong>Rôle : </strong>{{ user.role }}
+            </div>
+            <div class="text-lg font-medium text-gray-300">
+                <strong>Bio : </strong>{{ user.bio|default:"Pas de bio" }}
+            </div>
+        </div>
+
+        <div class="mt-8 text-center">
+            <a href="{% url 'update_profile' %}" class="inline-block bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">
+                Modifier mon profil
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

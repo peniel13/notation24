@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Détails de la Classe{% endblock %}
+
+{% block content %}
+<div class="bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+    <h1 class="text-4xl font-semibold text-white text-center mb-8">Détails de la Classe : {{ classe.nom }}</h1>
+
+    <!-- Affichage des élèves -->
+    <div class="mb-8">
+        <h2 class="text-2xl text-white font-semibold">Élèves de la classe</h2>
+        <ul class="list-disc pl-6">
+            {% for eleve in eleves %}
+            <li class="text-gray-400">
+                <a href="{% url 'details_eleve' eleve_id=eleve.id %}" class="hover:text-indigo-500">
+                    {{ eleve.nom }} {{ eleve.prenom }}
+                </a>
+            </li>
+            {% empty %}
+            <li class="text-gray-400">Aucun élève inscrit pour cette classe.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Affichage des matières -->
+    <div>
+        <h2 class="text-2xl text-white font-semibold">Matières enseignées</h2>
+        <ul class="list-disc pl-6">
+            {% for matiere in matieres %}
+            <li class="text-gray-400">
+                <a href="{% url 'details_matiere' matiere_id=matiere.id %}" class="hover:text-indigo-500">
+                    {{ matiere.nom }}
+                </a>
+            </li>
+            {% empty %}
+            <li class="text-gray-400">Aucune matière assignée à cette classe.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

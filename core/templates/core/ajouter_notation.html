@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}Ajouter Notation{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto bg-gray-800 rounded-lg shadow-lg p-8">
+        <h2 class="text-3xl font-semibold text-center text-white mb-6">Ajouter une Notation</h2>
+
+        {% if messages %}
+            <div class="mb-4">
+                {% for message in messages %}
+                    <div class="text-green-500 text-center">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="POST" class="space-y-6">
+            {% csrf_token %}
+
+            <!-- Classe -->
+            <div class="mb-4">
+                <label for="id_classe" class="block text-sm font-medium text-white">Classe</label>
+                <select id="id_classe" name="classe" class="w-full px-4 py-2 mt-2 text-gray-900 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    <option value="">Sélectionner une classe</option>
+                    {% for classe in classes %}
+                        <option value="{{ classe.id }}">{{ classe.nom }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Élève -->
+            <div class="mb-4">
+                <label for="id_eleve" class="block text-sm font-medium text-white">Élève</label>
+                <select id="id_eleve" name="eleve" class="w-full px-4 py-2 mt-2 text-gray-900 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    <option value="" disabled selected>Choisir un élève</option>
+                    <!-- Les élèves seront chargés dynamiquement -->
+                </select>
+            </div>
+
+            <!-- Matière -->
+            <div class="mb-4">
+                <label for="id_matiere" class="block text-sm font-medium text-white">Matière</label>
+                <select id="id_matiere" name="matiere" class="w-full px-4 py-2 mt-2 text-gray-900 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    <option value="">Sélectionner une matière</option>
+                    {% if matieres %}
+                        {% for matiere in matieres %}
+                            <option value="{{ matiere.id }}">{{ matiere.nom }}</option>
+                        {% endfor %}
+                    {% else %}
+                        <option value="" disabled>Aucune matière disponible pour vous.</option>
+                    {% endif %}
+                </select>
+            </div>
+
+            <!-- Période -->
+            <div class="mb-4">
+                <label for="id_periode" class="block text-sm font-medium text-white">Période</label>
+                <select id="id_periode" name="periode" class="w-full px-4 py-2 mt-2 text-gray-900 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    <option value="">Sélectionner une période</option>
+                    {% for periode in periodes %}
+                        <option value="{{ periode.id }}">{{ periode.nom }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Note Attendue -->
+            <div class="mb-4">
+                <label for="note_attendue" class="block text-sm font-medium text-white">Note Attendue</label>
+                <input type="number" name="note_attendue" id="note_attendue" class="w-full px-4 py-2 mt-2 text-gray-900 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="Note Attendue" min="0" required>
+            </div>
+
+            <!-- Note Obtenue -->
+            <div class="mb-4">
+                <label for="note_obtenue" class="block text-sm font-medium text-white">Note Obtenue</label>
+                <input type="number" name="note_obtenue" id="note_obtenue" class="w-full px-4 py-2 mt-2 text-gray-900 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="Note Obtenue" min="0" required>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="mb-4">
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-md text-sm font-medium">
+                    Ajouter la Notation
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Script jQuery pour gérer les dépendances de champ -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        const classeSelect = $("#id_classe");
+        const eleveSelect = $("#id_eleve");
+        const matiereSelect = $("#id_matiere");
+
+        // Quand la classe change
+        classeSelect.change(function () {
+            const classeId = $(this).val();
+            const url = "{% url 'load_eleves' %}";
+
+            // Effectuer une requête AJAX pour charger les élèves de la classe sélectionnée
+            $.ajax({
+                url: url,
+                data: {
+                    'classe_id': classeId
+                },
+                success: function (data) {
+                    eleveSelect.html(data); // Mettre à jour la liste des élèves
+                    matiereSelect.empty(); // Réinitialiser la liste des matières
+                }
+            });
+        });
+
+        // Quand l'élève change
+        eleveSelect.change(function () {
+            const eleveId = $(this).val();
+            const url = "{% url 'load_matieres' %}";
+
+            // Effectuer une requête AJAX pour charger les matières de la classe de l'élève
+            $.ajax({
+                url: url,
+                data: {
+                    'classe_id': classeSelect.val() // Passer la classe sélectionnée
+                },
+                success: function (data) {
+                    matiereSelect.html(data); // Mettre à jour la liste des matières
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock %}

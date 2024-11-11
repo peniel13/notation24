@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Détails de l'Élève{% endblock %}
+
+{% block content %}
+<div class="bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+    <h1 class="text-4xl font-semibold text-white text-center mb-8">Détails de l'Élève : {{ eleve.nom }} {{ eleve.prenom }}</h1>
+    
+    <!-- Informations de l'élève -->
+    <div class="bg-gray-800 rounded-lg shadow-lg p-8 mb-8">
+        <h2 class="text-2xl font-semibold text-white mb-4">Informations Personnelles</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <p class="text-lg text-gray-300"><strong>Nom Complet :</strong> {{ eleve.nom }} {{ eleve.prenom }}</p>
+                <p class="text-lg text-gray-300"><strong>Email :</strong> {{ eleve.email }}</p>
+                <p class="text-lg text-gray-300"><strong>Classe :</strong> {{ eleve.classe.nom }}</p>
+                <p class="text-lg text-gray-300"><strong>Âge :</strong> {{ eleve.age }} ans</p>
+            </div>
+            <div>
+                <p class="text-lg text-gray-300"><strong>Adresse :</strong> {{ eleve.adresse }}</p>
+                <p class="text-lg text-gray-300"><strong>Téléphone :</strong> {{ eleve.telephone }}</p>
+                <p class="text-lg text-gray-300"><strong>Date d'Inscription :</strong> {{ eleve.date_inscription|date:"d M Y" }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card de redirection vers la situation de l'élève -->
+    <div class="bg-gray-800 rounded-lg shadow-lg p-8 mb-8">
+        <h2 class="text-2xl font-semibold text-white mb-4">Voir la Situation de l'Élève</h2>
+        <p class="text-lg text-gray-300 mb-4">Consultez la situation détaillée de cet élève par matière et par période.</p>
+        <a href="{% url 'situations_eleve' eleve.id %}" class="block bg-indigo-600 hover:bg-indigo-700 text-white text-center p-4 rounded-lg shadow-lg transition duration-200">
+            Voir la Situation de l'Élève
+        </a>
+    </div>
+
+    <!-- Notations par Période -->
+    <div class="bg-gray-800 rounded-lg shadow-lg p-8">
+        <h2 class="text-2xl font-semibold text-white mb-4">Notations par Période</h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {% for periode, data in notations_par_periode.items %}
+            <a href="{% url 'details_periode' eleve_id=eleve.id periode_id=periode.id %}" class="block bg-gray-700 rounded-lg shadow-lg overflow-hidden hover:bg-indigo-600 transition duration-200">
+                <div class="p-6 text-center">
+                    <h3 class="text-xl text-indigo-500 mb-4">{{ periode.nom }}</h3>
+                    <div class="mb-6">
+                        <h3 class="text-xl text-indigo-500 mb-4">Pourcentage : {{ data.pourcentage|floatformat:2 }}%</h3>
+                    </div>
+                </div>
+            </a>
+            {% empty %}
+            <p class="text-gray-400 text-center">Aucune période trouvée.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

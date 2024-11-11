@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="relative bg-cover bg-center h-[60vh]" style="background-image: url('{% static 'img/slid.jpg' %}');">
+    <div class="absolute inset-0 bg-black opacity-50"></div> <!-- Overlay sombre -->
+    <div class="relative z-10 text-center text-white px-4 py-20">
+        <h1 class="text-4xl sm:text-5xl font-bold mb-4">La notation des élèves en ligne</h1>
+        <p class="text-lg sm:text-xl max-w-3xl mx-auto">
+            Exclusivement pour les profs de l'école. Les profs seront appelés à se connecter et seront ensuite vérifiés pour commencer à noter les élèves.
+        </p>
+    </div>
+</section>
+
+
+{% endblock content %}
